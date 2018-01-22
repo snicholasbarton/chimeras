@@ -2,7 +2,7 @@ function dxdt = RMoscillator(x, params, A)
 %RMoscillator RHS of N, coupled Rosenzweig-MacArthur oscillators
 
 % unroll x
-N = length(x); N = N/2; % number of nodes in the system
+N = length(x)/2; % number of nodes in the system
 V = x(1:N); % prey
 H = x(N+1:2*N); % predators
 
