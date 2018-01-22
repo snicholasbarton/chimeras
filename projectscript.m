@@ -1,5 +1,5 @@
 % build the network
-N = 5; % number of nodes in the graph
+N = 10; % number of nodes in the graph
 P = 1; % adjacency bandwidth
 % topology of the network
 A = toeplitz([0,ones(1,P),zeros(1,N-P-2),1]); % adjacency matrix
@@ -28,3 +28,11 @@ figure(1)
 V=sum(X(:,1:N),2);
 H=sum(X(:,N+1:2*N),2);
 plot(V(5000:6000),H(5000:6000), 'LineWidth', 1.5) % phase plane
+
+%network plot
+figure(2)
+hold off
+for i = 1:100:(size(X,1))
+    networkPlot(A, X(i,1:N)') %This plots the snapshot of the vegetation numbers at step i
+    pause(0.1)
+end
