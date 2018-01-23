@@ -31,8 +31,7 @@ plot(V(5000:6000),H(5000:6000), 'LineWidth', 1.5) % phase plane
 
 %network plot
 figure(2)
-hold off
-for i = 1:100:(size(X,1))
-    networkPlot(A, X(i,1:N)') %This plots the snapshot of the vegetation numbers at step i
-    pause(0.1)
-end
+
+networkPlot(A, X(:,(N+1):2*N)) %This plots the snapshot of the vegetation numbers at step i
+
+
