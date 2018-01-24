@@ -3,7 +3,6 @@ N = 10; % number of nodes in the graph
 P = 1; % adjacency bandwidth
 % topology of the network
 A = toeplitz([0,ones(1,P),zeros(1,N-P-2),1]); % adjacency matrix
-
 % parameter values
 r = 0.5; % growth rate of prey
 K = 0.5; % carrying capacity of prey
@@ -27,11 +26,10 @@ x0 = rand(2*N,1)*0.5; % random initial conditions
 figure(1)
 V=sum(X(:,1:N),2);
 H=sum(X(:,N+1:2*N),2);
-plot(V(5000:6000),H(5000:6000), 'LineWidth', 1.5) % phase plane
+plot(V(5000:6000),H(5000:6000), 'LineWidth', 1.5); % phase plane
 
 %network plot
 figure(2)
-
-networkPlot(A, X(:,(N+1):2*N)) %This plots the snapshot of the vegetation numbers at step i
+networkPlot(A, X(1:5000,:)) %This plots the population data as a network graph
 
 
