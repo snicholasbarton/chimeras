@@ -6,12 +6,12 @@ A = toeplitz([0,ones(1,P),zeros(1,N-P-2),1]); % adjacency matrix
 
 % parameter values
 r = 0.5; % growth rate of prey
-K = 0.5; % carrying capacity of prey
+K = 0.5; % carrying capacity of prey; try K=4, larger K yields dyssynchrony
 alpha = 1; % predation rate
 B = 0.16; % half-saturation constant
 beta = 0.5; % prey efficiency
 m = 0.2; % mortality of prey
-sigma = 1.7; % coupling strength
+sigma = 1.7; % coupling strength; try sigma=0.001
 
 params = [r K alpha B beta m sigma P]; % vectorise the parameters
 
@@ -30,8 +30,8 @@ H=sum(X(:,N+1:2*N),2);
 plot(V(5000:6000),H(5000:6000), 'LineWidth', 1.5) % phase plane
 figure(2)
 subplot(2,1,1);
-% plot(T(5000:5150),V(5000:5150))
-plot(T(18488:19043),V(18488:19043))
+plot(T(5000:5150),V(5000:5150))
+% plot(T(18488:19043),V(18488:19043))
 subplot(2,1,2);
-% plot(T(5000:5150),H(5000:5150))
-plot(T(18488:19043),H(18488:19043))
+plot(T(5000:5150),H(5000:5150))
+% plot(T(18488:19043),H(18488:19043))
