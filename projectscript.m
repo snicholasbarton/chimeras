@@ -1,3 +1,4 @@
+%----Angelica G
 % build the network
 N = 5; % number of nodes in the graph
 P = 1; % adjacency bandwidth

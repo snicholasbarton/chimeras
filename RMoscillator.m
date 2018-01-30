@@ -1,3 +1,4 @@
+%--Angelica
 function dxdt = RMoscillator(x, params, A)
 %RMoscillator RHS of N, coupled Rosenzweig-MacArthur oscillators
 
