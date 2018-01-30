@@ -17,8 +17,8 @@ params = [r K alpha B beta m sigma P]; % vectorise the parameters
 
 % initial conditions
 x0 = rand(2*N,1)*0.5; % random initial conditions, two populations V and H
-V0 = [ones(N/4,1)*0.33;rand(N/2,1)*0.5;ones(N/4,1)*0.05];
-H0 = [ones(N/4,1)*0.1;rand(N/2,1)*0.5;ones(N/4,1)*0.1];
+V0 = [ones(N/4,1)*;rand(N/2,1)*0.5;zeros(N/4,1)];
+H0 = [ones(N/4,1);rand(N/2,1)*0.5;zeros(N/4,1)];
 x1 = [V0;H0];
 
 % solve the ode
@@ -40,13 +40,5 @@ mask = find(T>5000 & T<5150);
 figure(3)
 imagesc(1:1:N,T(mask),X(mask,1:N));
 colorbar
-figure(4)
-imagesc(1:1:N,T(mask),X(mask,N+1:end));
-colorbar
-figure(5)
-subplot(2,1,1)
-plot(1:1:N,V0,'*')
-subplot(2,1,2)
-plot(1:1:N,H0,'*')
-% figure(6)
+% figure(4)
 % networkPlot(A, X(mask,:)) %This plots the population data as a network graph
