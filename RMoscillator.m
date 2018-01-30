@@ -17,7 +17,9 @@ sigma = params(7);
 P = params(8);
 
 % differential equations for V, H; replace sum with mat-vec mult
-dVdt = r*V.*(1-V./K)-(alpha*H.*V)./(V+B);
+% dVdt = r*V.*(1-V./K)-(alpha*H.*V)./(V+B);
+dVdt = r.*V.*(1-V./K)-alpha*H.*V./(V+B);
+% dHdt = H.*(alpha*beta*V./(V+B)-m) + sigma/(2*P).*(A*H - diag(H)*A*ones(N,1));
 dHdt = H.*(alpha*beta*V./(V+B)-m) + sigma/(2*P).*(A*H - diag(H)*A*ones(N,1));
 
 % roll up results

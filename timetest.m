@@ -1,7 +1,7 @@
 clear
 % set up the different size networks to test
 % some these are bigger than what we'll use in the study
-N = 2.^[5 6 7 8 9 10 11];
+N = 2.^[5 6 7 8 9 10];
 
 % arrays to store the timed results
 matvec_mult = zeros(5,length(N));

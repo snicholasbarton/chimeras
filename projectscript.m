@@ -1,8 +1,12 @@
 % build the network
-N = 5; % number of nodes in the graph
+N = 1; % number of nodes in the graph
 P = 1; % adjacency bandwidth
 % topology of the network
-A = toeplitz([0,ones(1,P),zeros(1,N-P-2),1]); % adjacency matrix
+if N == 1
+    A = 1;
+else
+    A = toeplitz([0,ones(1,P),zeros(1,N-P-2),1]); % adjacency matrix
+end
 
 % parameter values
 r = 0.5; % growth rate of prey
@@ -19,12 +23,32 @@ params = [r K alpha B beta m sigma P]; % vectorise the parameters
 x0 = rand(2*N,1)*0.5; % random initial conditions
 
 % solve the ode
-[T, X] = ode45(@(t, x) RMoscillator(x, params, A), [0 6000], x0);
+[T,X] = ode45(@(t, x) RMoscillator(x, params, A), [0 6000], x0);
 
 % plot the results
+
+% find the right sample size to reproduce the figures
+% searching T is not too bad since T is ordered
+mask = find(T > 5000 & T < 5150);
 
 % limit cycle
 figure(1)
 V=sum(X(:,1:N),2);
 H=sum(X(:,N+1:2*N),2);
-plot(V(5000:6000),H(5000:6000), 'LineWidth', 1.5) % phase plane
+plot(V(mask),H(mask), 'LineWidth', 1.5) % phase plane
+xlabel('$$V$$','Interpreter','latex')
+ylabel('$$H$$','Interpreter','latex')
+title('Limit Cycle attractor - Dutta/Banerjee Fig 1a','Interpreter','latex')
+
+% H, V vs t
+figure(2)
+plot(T(mask),V(mask), 'LineWidth', 1.5)
+xlabel('$$t$$','Interpreter','latex')
+ylabel('$$V$$','Interpreter','latex')
+title('Time series of $$V$$ - Dutta/Banerjee Fig 1bi','Interpreter','latex')
+
+figure(3)
+plot(T(mask),H(mask), 'LineWidth', 1.5)
+xlabel('$$t$$','Interpreter','latex')
+ylabel('$$H$$','Interpreter','latex')
+title('Time series of $$H$$ - Dutta/Banerjee Fig 1bii','Interpreter','latex')
