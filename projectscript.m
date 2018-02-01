@@ -40,7 +40,7 @@ x0(167:200) = 0.09;
 [T, X] = ode45(@(t, x) RMoscillator(x, params, A), 0:0.1:6000, x0);
 
 % plot the results
-mask = find(T > 5000);% & T < 5500);
+mask = find(T > 5000 & T < 5500);
 
 % % limit cycle
 % figure(1)
@@ -65,7 +65,19 @@ mask = find(T > 5000);% & T < 5500);
 % figure(4)
 % networkPlot(A, X(1:5000,:)) %This plots the population data as a network graph
 
-% colour plots
+% colour plots - top is vegetation, bottom is herbivores
 figure(5)
-Y = X(mask,N+1:2*N);
+colorbar
+subplot(2,1,1)
+Y = X(mask,1:N);
 imagesc(Y)
+xlabel('$$i$$','Interpreter','latex')
+ylabel('$$t$$','Interpreter','latex')
+title('$$V$$ spatiotemporal colour map','Interpreter','latex')
+subplot(2,1,2)
+Z = X(mask,N+1:2*N);
+imagesc(Z)
+xlabel('$$i$$','Interpreter','latex')
+ylabel('$$t$$','Interpreter','latex')
+title('$$H$$ spatiotemporal colour map','Interpreter','latex')
+
