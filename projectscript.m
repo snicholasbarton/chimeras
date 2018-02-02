@@ -1,4 +1,5 @@
 % build the network
+
 N = 100; % number of nodes in the graph
 P = 28; % adjacency bandwidth
 % topology of the network
@@ -80,4 +81,3 @@ imagesc(Z)
 xlabel('$$i$$','Interpreter','latex')
 ylabel('$$t$$','Interpreter','latex')
 title('$$H$$ spatiotemporal colour map','Interpreter','latex')
-
