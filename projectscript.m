@@ -1,6 +1,6 @@
 % build the network
-N = 20; % number of nodes in the graph
-P = 6; % adjacency bandwidth
+N = 100; % number of nodes in the graph
+P = 20; % adjacency bandwidth
 % topology of the network
 if N == 1
     A = 1;
@@ -20,26 +20,29 @@ sigma = 1.7; % coupling strength
 params = [r K alpha B beta m sigma P]; % vectorise the parameters
 
 % initial conditions
-x0 = rand(2*N,1)*0.5; % random initial conditions
+% x0 = rand(2*N,1)*0.5; % random initial conditions
 
 % initial conditions for N = 100
-% x0 = ones(200,1)*0.252; % base condition
-% x0(37:46,1) = 0.1;
-% x0(37:46,1) = x0(37:46,1) + 0.25*rand(10,1);
-% x0(47:66,1) = 0.05;
-% x0(47:66,1) = x0(47:66,1) + 0.25*rand(20,1);
-% x0(67:100) = 0.033;
-% x0(101:136) = 0.102;
-% x0(137:146) = 0.05;
-% x0(137:146) = x0(137:146) + 0.25*rand(10,1);
-% x0(147:166) = 0.05;
-% x0(147:166) = x0(147:166) + 0.25*rand(20,1);
-% x0(167:200) = 0.09;
+x0 = ones(200,1)*0.252; % base condition
+x0(37:46,1) = 0.1;
+x0(37:46,1) = x0(37:46,1) + 0.25*rand(10,1);
+x0(47:66,1) = 0.05;
+x0(47:66,1) = x0(47:66,1) + 0.25*rand(20,1);
+x0(67:100) = 0.033;
+x0(101:136) = 0.102;
+x0(137:146) = 0.05;
+x0(137:146) = x0(137:146) + 0.25*rand(10,1);
+x0(147:166) = 0.05;
+x0(147:166) = x0(147:166) + 0.25*rand(20,1);
+x0(167:200) = 0.09;
 
 % solve the ode
-[T, X] = ode45(@(t, x) RMoscillator(x, params, A), 0:6000, x0);
+[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @linear_coupling), 0:6000, x0);
 
 % plot the results
+
+% find the right sample size to reproduce the figures
+% searching T is not too bad since T is ordered
 mask = find(T > 5000 & T < 5500);
 
 % % limit cycle
@@ -61,13 +64,9 @@ mask = find(T > 5000 & T < 5500);
 % ylabel('$$H$$','Interpreter','latex')
 % title('Time series of $$H$$ - Dutta/Banerjee Fig 1bii','Interpreter','latex')
 
-% %network plot
-figure(4)
-networkPlot(A, X) %This plots the population data as a network graph
-
-% find the right sample size to reproduce the figures
-% searching T is not too bad since T is ordered
-mask = find(T > 5000 & T < 5150);
+% % %network plot
+% figure(4)
+% networkPlot(A, X) %This plots the population data as a network graph
 
 % % limit cycle
 % figure(1)
