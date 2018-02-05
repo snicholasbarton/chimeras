@@ -1,13 +1,14 @@
 %----Angelica G
-% build the network
+
 clear
 
 N = 100; % number of nodes in the graph
 P = 1; % adjacency bandwidth
-e = 60;
+e = 10; %number of edges of random matrix
 
 A=makeAdjMat(N,'random',e);
 % A=makeAdjMat(N,'ring',P);
+
 
 % parameter values
 r = 0.5; % growth rate of prey
@@ -38,8 +39,8 @@ x0(147:166) = 0.05;
 x0(147:166) = x0(147:166) + 0.25*rand(20,1);
 x0(167:200) = 0.09;
 
-% solve the ode
 
+% solve the ode
 [T, X] = ode45(@(t, x) RMoscillator(x, params, A), 0:6000, x0);
 
 
@@ -86,3 +87,6 @@ subplot(2,1,2)
 plot(T(mask),H(mask,:))
 xlabel('time step','Interpreter','latex')
 title('$$H$$ behaviour','Interpreter','latex')
+
+
+

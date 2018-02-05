@@ -19,8 +19,11 @@ else
             if exist('param','var') == 0
                 disp('Coupling range not provided, using P = 1')
                 P = 1;
+            elseif param>N/2
+                disp('Coupling range too big, using P = N/2')
+                P=floor(N/2);
             else
-                P=param;
+                P=floor(param);
             end
 
             A = toeplitz([0,ones(1,P),zeros(1,N-2*P-1),ones(1,P)]); % adjacency matrix
@@ -28,9 +31,10 @@ else
 
         case 'sqlattice'
             rN = sqrt(N);
-            if (mod(rN,1) ~= 1 || N < 9) %check inputs
+            if (mod(rN,1) ~= 0 || N < 9) %check inputs
                 disp('N must be a square number and at least 9 for sqlattice topology')
                 disp('Using N = 9')
+                N=9;
             end
             A = zeros(N,N);
             
@@ -59,17 +63,13 @@ else
             if exist('param','var') == 0
                 disp('Number of edges not provided, using e = N')
                 e = N;
+            elseif param>sum(1:N-1)
+                disp('Number of edges too big, using maximum e=')
+                disp(sum(1:N-1))
+                e = sum(1:N-1);
             else
                 e=param;
             end
-            
-            if e>sum(1:N-1)
-                disp('maximum number of edges is, using e=')
-                disp(sum(1:N-1))
-                
-                e = sum(1:N-1);
-            end
-            
                 
             A=zeros(N,N);
 
