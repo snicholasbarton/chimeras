@@ -32,5 +32,4 @@ for i = 1:10:(size(x,1))
     
     pause(0.05)                                                
 end
-
 end
