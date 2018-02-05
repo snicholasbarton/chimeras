@@ -1,8 +1,8 @@
 function dxdt = RMoscillator(x, params, A)
 
 shape=1;
-maxd=0.5;
-hS=0.5;
+maxd=0.1;
+hS=22;
 
 D=@(H) maxd.*H.^(shape)./(hS.^shape+H.^shape);
 
