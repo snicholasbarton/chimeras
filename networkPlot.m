@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 % By Oliver Bamford
+=======
+>>>>>>> e52128ffe5fff05b616b7bd8572401f3f9b09a7c
 function networkPlot(A, x)
 %Plots the network described by adjacency matrix A and node values x 
 %A: nxn  for n nodes
@@ -20,6 +23,10 @@ for j = 1:n
     end
 end
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e52128ffe5fff05b616b7bd8572401f3f9b09a7c
 for i = 1:10:(size(x,1))
     if i > 1
         delete(tempV) %remove previous nodes
@@ -30,6 +37,13 @@ for i = 1:10:(size(x,1))
     %plot nodes with size corresponding to herbivore population
     tempH = scatter(xy(1:n,1), xy(1:n,2), 10000*x(i,(n+1):2*n), 'filled', 'b');
     
+<<<<<<< HEAD
     pause(0.05)                                                
 end
+=======
+    pause(0.01)                                                
+end
+
+
+>>>>>>> e52128ffe5fff05b616b7bd8572401f3f9b09a7c
 end
