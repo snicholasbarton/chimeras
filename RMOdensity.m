@@ -2,6 +2,7 @@ function dxdt = RMOdensity(x, params, A)
 
 shape=1;
 maxd=0.5;
+
 hS=22;
 
 D=@(H) maxd.*H.^(shape)./(hS.^shape+H.^shape);

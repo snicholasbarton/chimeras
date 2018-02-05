@@ -1,7 +1,8 @@
 % build the network
 
-N = 20; % number of nodes in the graph
-P = 6; % adjacency bandwidth
+N = 100; % number of nodes in the graph
+P = 28; % adjacency bandwidth
+
 % topology of the network
 if N == 1
     A = 1;
@@ -41,7 +42,8 @@ x0 = rand(2*N,1)*0.5; % random initial conditions
 [T, X] = ode45(@(t, x) RMoscillator(x, params, A), 0:6000, x0);
 
 % plot the results
-mask = find(T > 5000 & T < 5500);
+
+mask = find(T > 5000 & T <= 6000);
 
 % % limit cycle
 % figure(1)
@@ -63,8 +65,9 @@ mask = find(T > 5000 & T < 5500);
 % title('Time series of $$H$$ - Dutta/Banerjee Fig 1bii','Interpreter','latex')
 
 % %network plot
-figure(4)
-networkPlot(A, X) %This plots the population data as a network graph
+
+%figure(4)
+%networkPlot(A, X) %This plots the population data as a network graph
 
 % colour plots - top is vegetation, bottom is herbivores
 figure(5)
@@ -81,3 +84,30 @@ imagesc(Z)
 xlabel('$$i$$','Interpreter','latex')
 ylabel('$$t$$','Interpreter','latex')
 title('$$H$$ spatiotemporal colour map','Interpreter','latex')
+
+dev=std(Y(:,1:N));
+flag1=0;
+flag2=0;
+
+for i=1:N
+    if(dev(i)<0.01) 
+        flag1=1;
+    end
+    if(dev(i)>0.01)
+        flag2=1;
+    end
+end
+
+if flag1==1 && flag2 ==0
+    state=1; % CD all zero SD
+end
+
+if flag1==1 && flag2 ==1
+    state=2; % CSOD mixed zero sd and nonzero sd
+end
+
+if flag1==0 && flag2 ==1
+    state=3; % Sync oscillation all nonzero sd
+end
+
+
