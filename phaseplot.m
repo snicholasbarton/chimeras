@@ -1,11 +1,11 @@
-p=1:5:40;
-all_sigma=linspace(1,3.5,length(p));
-state=zeros(length(p));
+Pvec=[1];
+sigmavec=[1.7];
+state=zeros(length(Pvec));
 
-for i=1:length(p)
-    P=p(i);
-    for j=1:length(p)
-        sigma=all_sigma(j);
+for i=1:length(Pvec)
+    P=Pvec(i);
+    for j=1:length(sigmavec)
+        sigma=sigmavec(j);
         state(j,i) = Chimera(P,sigma);
     end
 end

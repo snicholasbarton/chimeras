@@ -44,10 +44,9 @@ x0(147:166) = 0.05;
 x0(147:166) = x0(147:166) + 0.25*rand(20,1);
 x0(167:200) = 0.09;
 
-%%%%%%%%%%%% solve ode %%%%%%%%%%
-
 % solve the ode
-[T, X] = ode45(@(t, x) RMoscillator(x, params, A), 0:6000, x0);
+
+[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @linear_coupling), 0:6000, x0);
 
 %%%%%%%%%%%% organise data %%%%%%%%%%
 
@@ -58,27 +57,22 @@ H=X(:,N+1:2*N);
 
 dev=std(V(mask,:)); 
 
-%%%%%%%%%%%% classification %%%%%%%%%%
-
-cond1=0;
-cond2=0;
-
-if any(dev<0.01)
-    cond1=1;
-end
-if any(dev>0.01)
-    cond2=1;
-end
+%%%%%%%%%%%%% classification %%%%%%%%%% 
 
 
-if cond2 == 0 % if all sd are 0
+%find states
+
+if max(dev) < 0.01       % if all sd are 0 / all steady states
     state=1; 
     disp([P sigma]);
     disp('CD');
-end
 
-if cond1==1 && cond2 ==1
+elseif min(dev) > 0.01   % if all sd are non-0 / no steady states
+    state=3; 
+    disp([P sigma]);
+    disp('Sync');
 
+else                     % some oscillatory & some steady states
     sdrange=range(dev(dev>sqrt(eps)));
     
     if sdrange>0.1*max(dev)
@@ -92,11 +86,6 @@ if cond1==1 && cond2 ==1
     end
 end
 
-if cond1 == 0 % if all sd are non-0 
-    state=3; 
-    disp([P sigma]);
-    disp('Sync');
-end
 
 end
 
