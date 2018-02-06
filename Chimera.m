@@ -1,17 +1,14 @@
 function state = Chimera(P,sigma)
+%CHIMERA_STATE
+%Inputs: 
+%       P - Coupling range (for ring topology)
+%       sigma - coupling strength
+%Outputs the state of system after transient period
 
 % build the network
-%p=[1,3,5,10,15,30];
-%for i=1:5
-N = 100; % number of nodes in the graph
-%P = p(i) % adjacency bandwidth
-% topology of the network
 
-if N == 1
-    A = 1;
-else
-    A = toeplitz([0,ones(1,P),zeros(1,N-2*P-1),ones(1,P)]); % adjacency matrix
-end
+N = 100; % number of nodes in the graph
+A = makeAdjMat(N, 'ring', P);
 
 % parameter values
 r = 0.5; % growth rate of prey
@@ -42,50 +39,12 @@ load('x0')
 % x0(167:200) = 0.09;
 
 % solve the ode
-[T, X] = ode45(@(t, x) RMoscillator(x, params, A), 0:6000, x0);
+[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @linear_coupling), 0:6000, x0);
 
 % plot the results
 mask = find(T > 5000 & T <= 6000);
 
-% % limit cycle
-% figure(1)
-% V=sum(X(:,1:N),2);
-% H=sum(X(:,N+1:2*N),2);
-% plot(V(mask),H(mask), 'LineWidth', 1.5) % phase plane
-%
-% % H, V vs t
-% figure(2)
-% plot(T(mask),V(mask), 'LineWidth', 1.5)
-% xlabel('$$t$$','Interpreter','latex')
-% ylabel('$$V$$','Interpreter','latex')
-% title('Time series of $$V$$ - Dutta/Banerjee Fig 1bi','Interpreter','latex')
-%
-% figure(3)
-% plot(T(mask),H(mask), 'LineWidth', 1.5)
-% xlabel('$$t$$','Interpreter','latex')
-% ylabel('$$H$$','Interpreter','latex')
-% title('Time series of $$H$$ - Dutta/Banerjee Fig 1bii','Interpreter','latex')
-
-% %network plot
-
-%figure(4)
-%networkPlot(A, X) %This plots the population data as a network graph
-
-% %colour plots - top is vegetation, bottom is herbivores
-% figure(5)
-% colorbar
-% subplot(2,1,1)
 Y = X(mask,1:N);
-% imagesc(Y)
-% xlabel('$$i$$','Interpreter','latex')
-% ylabel('$$t$$','Interpreter','latex')
-% title('$$V$$ spatiotemporal colour map','Interpreter','latex')
-% subplot(2,1,2)
-% Z = X(mask,N+1:2*N);
-% imagesc(Z)
-% xlabel('$$i$$','Interpreter','latex')
-% ylabel('$$t$$','Interpreter','latex')
-% title('$$H$$ spatiotemporal colour map','Interpreter','latex')
 
 dev=std(Y(:,1:N)); % Y veg Z herbivore
 flag1=0;

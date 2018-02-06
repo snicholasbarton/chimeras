@@ -12,7 +12,7 @@ else
     switch type
         case 'ring'
 
-            if ~exists(P)
+            if ~exist('P')
                 disp('Coupling range not provided, using P = 1')
                 P = 1;
             end

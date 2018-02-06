@@ -1,5 +1,12 @@
-function dxdt = RMoscillator(x, params, A)
+function dxdt = RMoscillator(x, params, A, coupling)
 %RMoscillator RHS of N, coupled Rosenzweig-MacArthur oscillators
+% INPUTS:
+%   x: length 2N vector containing initial conditions for [V;H]
+%   params: vector containing the parameters of the system
+%   A: adjacency matrix for the topology of the network
+%   coupling: a function handle with output being the coupling of nodes
+% OUTPUTS:
+%   dxdt: the time rate of change of [V;H]
 
 % unroll x
 N = length(x)/2; % number of nodes in the system
@@ -17,10 +24,9 @@ sigma = params(7);
 P = params(8);
 
 % differential equations for V, H; replace sum with mat-vec mult
-dVdt = r*V.*(1-V./K)-(alpha*H.*V)./(V+B);
-dHdt = H.*(alpha*beta*V./(V+B)-m) + sigma/(2*P).*(A*H - diag(H)*A*ones(N,1));
+dVdt = r.*V.*(1-V./K)-alpha*H.*V./(V+B);
+dHdt = H.*(alpha*beta*V./(V+B)-m) + coupling(x, params, A);
 
 % roll up results
 dxdt=[dVdt; dHdt];
 end
-
