@@ -1,12 +1,13 @@
-function dxdt = RMoscillator(x, params, A, coupling)
-%RMoscillator RHS of N, coupled Rosenzweig-MacArthur oscillators
+function couple_strength = linear_coupling(x, params, A)
+%linear_coupling Summary of this function goes here
 % INPUTS:
 %   x: length 2N vector containing initial conditions for [V;H]
 %   params: vector containing the parameters of the system
 %   A: adjacency matrix for the topology of the network
 %   coupling: a function handle with output being the coupling of nodes
 % OUTPUTS:
-%   dxdt: the time rate of change of [V;H]
+%   couple_strength: a length N vector containing coupling terms in H
+
 
 % unroll x
 N = length(x)/2; % number of nodes in the system
@@ -23,10 +24,6 @@ m = params(6);
 sigma = params(7);
 P = params(8);
 
-% differential equations for V, H; replace sum with mat-vec mult
-dVdt = r.*V.*(1-V./K)-alpha*H.*V./(V+B);
-dHdt = H.*(alpha*beta*V./(V+B)-m) + coupling(x, params, A);
+couple_strength = sigma/(2*P).*(A*H - diag(H)*A*ones(N,1));
 
-% roll up results
-dxdt=[dVdt; dHdt];
 end
