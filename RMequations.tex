@@ -1,0 +1,37 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{}
+\author{}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+%\section{}
+%\subsection{}
+
+The set of equations we are solving are:
+
+\begin{align}
+\frac{dV_i}{dt} &= rV_i\Big(1 - \frac{V_i}{K}\Big) - \frac{\alpha V_i}{V_i + B}H_i, \\
+\frac{dH_i}{dt} &= H_i\Big(\frac{\alpha \beta V_i}{V_i + B} - m\Big) + f_i(H),
+\end{align}
+
+\noindent where $V$ and $H$ are the vegetation and herbivore density interacting on $i = 1, 2, ... 100$ discrete nodes of a network, and where $r$ is intrinsic growth rate, $K$ is the carrying capacity of the vegetation, $\alpha$ is the maximum predation rate, $\beta$ is the herbivore efficiency, $B$ is the half-saturation constant, $m$ is the mortality rate of the herbivore, and $f$ is a function describing the coupling interaction between different nodes. An example $f$ is given below:
+
+\begin{equation}
+f_i(H) = \frac{\sigma}{2P} \sum_{k = i - P}^{i + P} (H_k - H_i)
+\end{equation}
+
+\noindent where $\sigma$ controls the coupling strength and $1 \leq P \leq N/2$ is the coupling range of the topology. This is linear coupling and is the coupling used in Dutta and Banerjee (2015) which we are trying to reproduce and extend. Our extension will be changing the form of $f$.
+
+
+
+\end{document}  
