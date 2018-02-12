@@ -30,4 +30,3 @@ dHdt = H.*(alpha*beta*V./(V+B)-m) + coupling(x, params, A);
 % roll up results
 dxdt=[dVdt; dHdt];
 end
-

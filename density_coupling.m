@@ -1,5 +1,5 @@
-function couple_strength = linear_coupling(x, params, A)
-%linear_coupling Summary of this function goes here
+function couple_strength = density_coupling(x, params, A)
+%density_coupling Summary of this function goes here
 % INPUTS:
 %   x: length 2N vector containing initial conditions for [V;H]
 %   params: vector containing the parameters of the system
@@ -24,6 +24,14 @@ m = params(6);
 sigma = params(7);
 P = params(8);
 
-couple_strength = sigma/(2*P).*(A*H - diag(H)*A*ones(N,1));
+shape=1;
+maxd=0.5;
+hS=22;
+D=@(H) maxd.*H.^(shape)./(hS.^shape+H.^shape);
+
+% differential equations for V, H;
+
+HD = H.*D(H);
+couple_strength = sigma/(2*P).*(A*HD - diag(HD)*A*ones(N,1));
 
 end
