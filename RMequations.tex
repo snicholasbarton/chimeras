@@ -32,6 +32,8 @@ f_i(H) = \frac{\sigma}{2P} \sum_{k = i - P}^{i + P} (H_k - H_i)
 
 \noindent where $\sigma$ controls the coupling strength and $1 \leq P \leq N/2$ is the coupling range of the topology. This is linear coupling and is the coupling used in Dutta and Banerjee (2015) which we are trying to reproduce and extend. Our extension will be changing the form of $f$.
 
-
-
+\begin{equation}
+D_n(H)=d_n\frac{H^\alpha}{S+H^\alpha}
+\end{equation}
+Where $d_n$ is the maximum dispersal rate per capita, varying this has the physical interpretation of varying the distance between nodes or the ability of animal to traverse that distance. S is the half saturation and $\alpha$ varies the shape of the distribution. We took this function evaluated at each node to gain the dispersal contribution (effectively limiting the maximum dispersal between nodes vs the linear case where the greater the difference, the greater the contribution).
 \end{document}  
