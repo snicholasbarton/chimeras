@@ -40,14 +40,11 @@ else
                            A(j,i) = 1;
                        end
                    end
-                   
                end
             end
             
             Adj = A; %construct symmetric matrix
-            
-            
-    end
-        
+   
+    end   
 end
 end

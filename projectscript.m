@@ -8,9 +8,6 @@ P = 15; % adjacency bandwidth
 
 A = makeAdjMat(N, 'ring', P);
 
-
-
-
 % parameter values
 r = 0.5; % growth rate of prey
 K = 0.5; % carrying capacity of prey
@@ -23,9 +20,7 @@ sigma = 1.3; % coupling strength
 params = [r K alpha B beta m sigma P]; % vectorise the parameters
 
 % initial conditions
-
 % x0 = rand(2*N,1)*0.5; % random initial conditions
-
 
 % initial conditions for N = 100
 x0 = ones(200,1)*0.252; % base condition
@@ -44,7 +39,8 @@ x0(167:200) = 0.09;
 load('x0');
 
 % solve the ode
-[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @density_coupling), 0:6000, x0);
+options = odeset('RelTol',1e-8);
+[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @density_coupling), 0:6000, x0, options);
 
 % plot the results
 
@@ -113,3 +109,5 @@ end
 if flag1==0 && flag2 ==1
     state=3; % Sync oscillation all nonzero sd
 end
+
+[fV, fH] = freq_fft(X,mask,1)
