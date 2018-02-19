@@ -25,8 +25,8 @@ sigma = params(7);
 P = params(8);
 
 shape=1;
-maxd=0.5;
-hS=22;
+maxd=0.25;
+hS=0.15;
 D=@(H) maxd.*H.^(shape)./(hS.^shape+H.^shape);
 
 % differential equations for V, H;

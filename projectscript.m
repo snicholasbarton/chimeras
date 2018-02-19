@@ -1,7 +1,7 @@
 % build the network
 
 N = 100; % number of nodes in the graph
-P = 15; % adjacency bandwidth
+P = 2; % adjacency bandwidth
 
 A = makeAdjMat(N, 'ring', P);
 
@@ -12,9 +12,10 @@ alpha = 1; % predation rate
 B = 0.16; % half-saturation constant
 beta = 0.5; % prey efficiency
 m = 0.2; % mortality of prey
-sigma = 1.3; % coupling strength
+sigma = 1.7; % coupling strength = epsilon for mean field
+Q = 1/P; % meanfield strength for meanfield coupling only
 
-params = [r K alpha B beta m sigma P]; % vectorise the parameters
+params = [r K alpha B beta m sigma P Q]; % vectorise the parameters
 
 % initial conditions
 % x0 = rand(2*N,1)*0.5; % random initial conditions
@@ -34,10 +35,11 @@ x0(147:166) = x0(147:166) + 0.25*rand(20,1);
 x0(167:200) = 0.09;
 
 load('x0');
+x0 = x0 + 0.001*ones(200,1);
 
 % solve the ode
-<<<<<<< HEAD
-[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @linear_coupling), 0:6000, x0);
+options = odeset('RelTol',1e-9,'AbsTol',1e-9);
+[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @interaction_coupling), 0:6000, x0,options);
 
 % plot the results
 
@@ -51,20 +53,19 @@ mask = find(T > 5000 & T <= 6000);
 % H=sum(X(:,N+1:2*N),2);
 % plot(V(mask),H(mask), 'LineWidth', 1.5) % phase plane
 % 
-% % H, V vs t
-% figure(2)
-% plot(T(mask),V(mask), 'LineWidth', 1.5)
-% xlabel('$$t$$','Interpreter','latex')
-% ylabel('$$V$$','Interpreter','latex')
-% title('Time series of $$V$$ - Dutta/Banerjee Fig 1bi','Interpreter','latex')
-% 
-% figure(3)
-% plot(T(mask),H(mask), 'LineWidth', 1.5)
-% xlabel('$$t$$','Interpreter','latex')
-% ylabel('$$H$$','Interpreter','latex')
-% title('Time series of $$H$$ - Dutta/Banerjee Fig 1bii','Interpreter','latex')
+% H, V vs t
+figure(2)
+plot(T(mask),X(mask,1:N), 'LineWidth', 1.5)
+xlabel('$$t$$','Interpreter','latex')
+ylabel('$$V$$','Interpreter','latex')
+title('Time series of $$V$$ - Dutta/Banerjee Fig 1bi','Interpreter','latex')
 
-<<<<<<< HEAD
+figure(3)
+plot(T(mask),X(mask,N+1:2*N), 'LineWidth', 1.5)
+xlabel('$$t$$','Interpreter','latex')
+ylabel('$$H$$','Interpreter','latex')
+title('Time series of $$H$$ - Dutta/Banerjee Fig 1bii','Interpreter','latex')
+
 % % %network plot
 % figure(4)
 % networkPlot(A, X) %This plots the population data as a network graph

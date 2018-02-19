@@ -1,6 +1,6 @@
 function state = Chimera(P,sigma)
 %CHIMERA_STATE
-%Inputs: 
+%Inputs:
 %       P - Coupling range (for ring topology)
 %       sigma - coupling strength
 %Outputs the state of system after transient period
@@ -39,48 +39,42 @@ load('x0')
 % x0(167:200) = 0.09;
 
 % solve the ode
-[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @linear_coupling), 0:6000, x0);
+options = odeset('RelTol',1e-9,'AbsTol',1e-9);
+[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @interaction_coupling), 0:6000, x0, options);
 
-% plot the results
-mask = find(T > 5000 & T <= 6000);
+%%%%%%%%%%%% organise data %%%%%%%%%%
 
-Y = X(mask,1:N);
+mask = T > 5000 & T <= 6000;
 
-dev=std(Y(:,1:N)); % Y veg Z herbivore
-flag1=0;
-flag2=0;
+V=X(:,1:N);
+H=X(:,N+1:2*N);
 
-if any(dev<0.01)
-    flag1=1;
-end
-if any(dev>0.01)
-    flag2=1;
-end
+dev=std(V(mask,:));
 
+%find states
 
-if flag1==1 && flag2 ==0
-    state=1; % CD all zero SD
+if max(dev) < 0.01       % if all sd are 0 / all steady states
+    state=1;
+    disp([P sigma]);
     disp('CD');
-end
-
-if flag1==1 && flag2 ==1
-    zeromask=find(dev>sqrt(eps));
-    ACsearch=range(dev(zeromask));
-    if ACsearch>0.1*max(dev)
+    
+elseif min(dev) > 0.01   % if all sd are non-0 / no steady states
+    state=3;
+    disp([P sigma]);
+    disp('Sync');
+    
+else                     % some oscillatory & some steady states
+    sdrange=range(dev(dev>sqrt(eps)));
+    
+    if sdrange>0.2*max(dev)
         state=4;
-        disp('AC + Death');
+        disp([P sigma]);
+        disp('AC+Death');
     else
-        state=2; % CSOD mixed zero sd and nonzero sd
+        state=2;
+        disp([P sigma]);
         disp('CSOD');
     end
 end
-
-if flag1==0 && flag2 ==1
-    state=3; % Sync oscillation all nonzero sd
-    disp('Sync');
+imagesc(V)
 end
-
-end
-
-    
-
