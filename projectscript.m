@@ -39,7 +39,7 @@ x0 = x0 + 0.001*ones(200,1);
 
 % solve the ode
 options = odeset('RelTol',1e-9,'AbsTol',1e-9);
-[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @interaction_coupling), 0:6000, x0,options);
+[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @interaction_coupling), 0:0.05:6000, x0,options);
 
 % plot the results
 
@@ -54,17 +54,17 @@ mask = find(T > 5000 & T <= 6000);
 % plot(V(mask),H(mask), 'LineWidth', 1.5) % phase plane
 % 
 % H, V vs t
-figure(2)
-plot(T(mask),X(mask,1:N), 'LineWidth', 1.5)
-xlabel('$$t$$','Interpreter','latex')
-ylabel('$$V$$','Interpreter','latex')
-title('Time series of $$V$$ - Dutta/Banerjee Fig 1bi','Interpreter','latex')
-
-figure(3)
-plot(T(mask),X(mask,N+1:2*N), 'LineWidth', 1.5)
-xlabel('$$t$$','Interpreter','latex')
-ylabel('$$H$$','Interpreter','latex')
-title('Time series of $$H$$ - Dutta/Banerjee Fig 1bii','Interpreter','latex')
+% figure(2)
+% plot(T(mask),X(mask,1:N), 'LineWidth', 1.5)
+% xlabel('$$t$$','Interpreter','latex')
+% ylabel('$$V$$','Interpreter','latex')
+% title('Time series of $$V$$ - Dutta/Banerjee Fig 1bi','Interpreter','latex')
+% 
+% figure(3)
+% plot(T(mask),X(mask,N+1:2*N), 'LineWidth', 1.5)
+% xlabel('$$t$$','Interpreter','latex')
+% ylabel('$$H$$','Interpreter','latex')
+% title('Time series of $$H$$ - Dutta/Banerjee Fig 1bii','Interpreter','latex')
 
 % % %network plot
 % figure(4)

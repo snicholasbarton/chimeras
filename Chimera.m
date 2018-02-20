@@ -40,40 +40,96 @@ load('x0')
 
 % solve the ode
 options = odeset('RelTol',1e-9,'AbsTol',1e-9);
-[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @interaction_coupling), 0:6000, x0, options);
+[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @interaction_coupling), 0:5e-2:12000, x0, options);
 
 %%%%%%%%%%%% organise data %%%%%%%%%%
 
-mask = T > 5000 & T <= 6000;
+mask = T > 10000 & T <= 12000;
 
 V=X(:,1:N);
 H=X(:,N+1:2*N);
 
 dev=std(V(mask,:));
 
-%find states
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% RIGHT NOW ONLY CLASSIFYING V STATES %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if max(dev) < 0.01       % if all sd are 0 / all steady states
-    state=1;
-    disp([P sigma]);
-    disp('CD');
-    
-elseif min(dev) > 0.01   % if all sd are non-0 / no steady states
-    state=3;
-    disp([P sigma]);
-    disp('Sync');
-    
-else                     % some oscillatory & some steady states
-    sdrange=range(dev(dev>sqrt(eps)));
-    
-    if sdrange>0.2*max(dev)
-        state=4;
-        disp([P sigma]);
-        disp('AC+Death');
-    else
-        state=2;
-        disp([P sigma]);
-        disp('CSOD');
+% search for chaos
+[Zv, ~] = find_chaos(X);
+if ~ISEMPTY(Zv)
+    has_any_V_chaos = 1;
+end
+
+% search for death
+[Dv, ~] = find_death(X);
+if ~ISEMPTY(Dv)
+    has_any_V_death = 1;
+end
+
+% find and classify states
+
+if length(Zv) == 100
+    state=6;
+    disp([P sigma])
+    disp('All chaotic')
+else
+    if max(dev) < 0.01       % if all sd are 0 / all steady states
+        if has_any_V_death
+            state=1;
+            disp([P sigma]);
+            disp('CD');
+        else % no death states, all non-zero steady
+            state = 9;
+            disp([P sigma]);
+            disp('Steady non-death')
+        end
+    elseif min(dev) > 0.01   % if all sd are non-0 / no steady states
+        % TODO: check if sync and chaos or what?
+        if ~has_any_V_chaos % there is no chaos
+            state = 3;
+            disp([P sigma]);
+            disp('Sync');
+        else % some chaos, some non-steady states
+            % are there sync states?
+            % are there amplitude chimera states?
+        end
+        
+    else                     % some non-steady & some steady states
+        % CASES: DEATH + CHAOS , NON-ZERO STEADY + CHAOS,
+        sdrange=range(dev(dev>sqrt(eps)));
+        if ~has_any_V_chaos % the case where there's no chaos
+            if sdrange>0.2*max(dev)
+                state=4;
+                disp([P sigma]);
+                disp('AC+Death');
+            else
+                state=2;
+                disp([P sigma]);
+                disp('CSOD');
+            end
+        else % there is some chaos, some steady states, some nonsteady
+            if has_any_V_death % there are death states
+                if length(Zv) + length(Dv) == 100
+                    state = 8;
+                    disp([P sigma]);
+                    disp('Chaos + death');
+                elseif 0 % here we add the conditions from FFT
+                    % are there synchronised oscillatory states?
+                    % are they sync or amplitude chimera?
+                else %no death states, no oscillating states --> chaos + non-zero steady
+                    state = 7;
+                    disp([P sigma]);
+                    disp('Chaos + steadystate');
+                end
+            else % there are no death states
+                if 1 % conditions from FFT
+                    % foo
+                else
+                    % bar
+                end
+            end
+        end
     end
 end
 imagesc(V)
