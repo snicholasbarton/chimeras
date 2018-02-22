@@ -1,12 +1,13 @@
-function state = ChimeraFreq2(V,T,A)
+function state = ChimeraFreq2(V,T,A,I)
 % function that checks if there is sync or freq-chimera or neither in the
 % non steady states
 
 % NOTE: function can be run only after you check its not CD
-    
+
+% state 0: Neither    
 % state 1: Sync       
 % state 2: Freq-Chimera
-% state 0: Neither
+
 
 N=size(V,2);
 M=size(V,1); 
@@ -42,8 +43,8 @@ for i = 1:N
     freqs=fshift(locs); %frequency at peaks
     
     % sort frequencies in order of intensity
-    [pks,I] = sort(pks,'descend');
-    freqs=freqs(I);
+    [pks,I2] = sort(pks,'descend');
+    freqs=freqs(I2);
     
     % take only maxpeak number of frequencies and store in freqvec
     if length(freqs)>maxpeak-1
@@ -59,22 +60,19 @@ end
 state=0; % no state
 
 % assuming it is not CD
-freqvec2=freqvec(any(freqvec,2)==1,:);
-I = 1:N;
-I=I(any(freqvec,2)==1);
 
-if max(std(freqvec2))<10^(-4) % if all nodes have the same frequencies
+if max(std(freqvec))<10^(-4) % if all nodes have the same frequencies
     state=1; % sync
 else 
-    freqvec2=freqvec2(:,1); % consider only dominant freq
-    [n, bin] = histc(freqvec2, uniquetol(freqvec2,1e-4));
+    freqvec=freqvec(:,1); % consider only dominant freq
+    [n, bin] = histc(freqvec, uniquetol(freqvec,1e-4));
     multiplevec = find(n > 1);
     for i =1:length(multiplevec)
         multiple=multiplevec(i);
+        ismember(bin, multiple)
         index2 = I(ismember(bin, multiple));
         
         logical=A(index2,index2);
-        
         logical=logical(:);
         
         if any(logical)==1
