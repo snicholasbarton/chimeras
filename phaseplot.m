@@ -1,5 +1,5 @@
 % plot a bifurcation diagram over the parameters P and sigma
-P_vec = 1:2; % the maximum dimension of the space 
+P_vec = 1:50; % the maximum dimension of the space 
 sigma_vec = linspace(1,3.5,length(P_vec));
 
 state = zeros(length(P_vec), length(sigma_vec));
