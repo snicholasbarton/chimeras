@@ -59,6 +59,9 @@ dev=std(V(mask,:));
 
 %%%%%%%%%%%%% classification %%%%%%%%%% 
 
+for i=1:N
+    
+
 
 %find states
 
