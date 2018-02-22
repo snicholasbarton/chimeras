@@ -1,14 +1,21 @@
-%plot a bifurcation diagram over the parameters P and sigma
+% plot a bifurcation diagram over the parameters P and sigma
+P_vec = 1:50; % the maximum dimension of the space 
+sigma_vec = linspace(1,3.5,length(p));
+lP = length(P_vec);
+lS = length(sigma_vec);
+state = zeros(lP, lS);
 
-p=1:5:40;
-all_sigma=linspace(1,3.5,length(p));
-state=zeros(length(p));
-
-for i=1:length(p)
-    P=p(i);
-    for j=1:length(p)
-        sigma=all_sigma(j);
-        state(j,i) = Chimera(P,sigma);
+for i = 1:lP
+    P = P_vec(i);
+    for j = 1:lS
+        sigma = sigma_vec(j);
+        % CHANGE YOUR COUPLING RULE HERE
+        state(i,j) = Chimera(P,sigma,@linear_coupling);
     end
 end
+
+% CHANGE THE NAME OF THE FILE HERE TO THE NAME OF YOUR COUPLING
+save('linear_bifurcation.mat','state')
+
+% view the final bifurcation
 imagesc(state)

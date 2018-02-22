@@ -29,4 +29,3 @@ couple_strength = sigma*Q*(Hbar - P*H);
 
 
 end
-

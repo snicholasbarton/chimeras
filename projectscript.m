@@ -1,9 +1,20 @@
-% build the network
+%----Angelica G
+
+clear
 
 N = 100; % number of nodes in the graph
+<<<<<<< HEAD
 P = 2; % adjacency bandwidth
 
 A = makeAdjMat(N, 'ring', P);
+=======
+P = 1; % adjacency bandwidth
+e = 10; %number of edges of random matrix
+
+A=makeAdjMat(N,'random',e);
+% A=makeAdjMat(N,'ring',P);
+
+>>>>>>> Nic
 
 % parameter values
 r = 0.5; % growth rate of prey
@@ -18,6 +29,10 @@ Q = 1/P; % meanfield strength for meanfield coupling only
 params = [r K alpha B beta m sigma P Q]; % vectorise the parameters
 
 % initial conditions
+<<<<<<< HEAD
+=======
+
+>>>>>>> Nic
 % x0 = rand(2*N,1)*0.5; % random initial conditions
 
 % initial conditions for N = 100
@@ -34,14 +49,19 @@ x0(147:166) = 0.05;
 x0(147:166) = x0(147:166) + 0.25*rand(20,1);
 x0(167:200) = 0.09;
 
+<<<<<<< HEAD
 load('x0');
 x0 = x0 + 0.001*ones(200,1);
+=======
+>>>>>>> Nic
 
 % solve the ode
 options = odeset('RelTol',1e-9,'AbsTol',1e-9);
 [T, X] = ode45(@(t, x) RMoscillator(x, params, A, @interaction_coupling), 0:0.05:6000, x0,options);
 
+
 % plot the results
+<<<<<<< HEAD
 
 % find the right sample size to reproduce the figures
 % searching T is not too bad since T is ordered
@@ -94,43 +114,54 @@ mask = find(T > 5000 & T <= 6000);
 
 % colour plots - top is vegetation, bottom is herbivores
 figure(6)
+=======
+mask = find(T > 5000 & T < 5500);
+
+
+%network plot
+figure()
+networkPlot(A, X) %This plots the population data as a network graph
+
+V=X(:,1:N);
+H=X(:,N+1:2*N);
+
+% limit cycle
+figure()
+Vsum=sum(X(:,1:N),2);
+Hsum=sum(X(:,N+1:2*N),2);
+plot(Vsum(mask),Hsum(mask), 'LineWidth', 1.5) % phase plane
+
+% colour plots - top is vegetation, bottom is herbivores
+figure()
+>>>>>>> Nic
 colorbar
+
 subplot(2,1,1)
-Y = X(mask,1:N);
-imagesc(Y)
+imagesc(V(mask,:))
 xlabel('$$i$$','Interpreter','latex')
 ylabel('$$t$$','Interpreter','latex')
 title('$$V$$ spatiotemporal colour map','Interpreter','latex')
+
 subplot(2,1,2)
-Z = X(mask,N+1:2*N);
-imagesc(Z)
+imagesc(H(mask,:))
 xlabel('$$i$$','Interpreter','latex')
 ylabel('$$t$$','Interpreter','latex')
 title('$$H$$ spatiotemporal colour map','Interpreter','latex')
 
-dev=std(Y(:,1:N));
-flag1=0;
-flag2=0;
+figure()
+subplot(2,1,1)
+plot(T(mask),V(mask,:))
+xlabel('time step','Interpreter','latex')
+title('$$V$$ behaviour','Interpreter','latex')
 
-for i=1:N
-    if(dev(i)<0.01) 
-        flag1=1;
-    end
-    if(dev(i)>0.01)
-        flag2=1;
-    end
-end
-
-if flag1==1 && flag2 ==0
-    state=1; % CD all zero SD
-end
-
-if flag1==1 && flag2 ==1
-    state=2; % CSOD mixed zero sd and nonzero sd
-end
-
-if flag1==0 && flag2 ==1
-    state=3; % Sync oscillation all nonzero sd
-end
+subplot(2,1,2)
+plot(T(mask),H(mask,:))
+xlabel('time step','Interpreter','latex')
+title('$$H$$ behaviour','Interpreter','latex')
 
 
+
+<<<<<<< HEAD
+
+=======
+>>>>>>> Nic

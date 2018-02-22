@@ -1,34 +1,20 @@
-function [Dv,varargout] = find_death(X)
-%find_death Checks if any of the nodes exhibit death (zero steady state)
+function D = find_death(X)
+%find_death Checks if any of the nodes are dead steady states
 % INPUTS:
-%   X: the output of our odesolve
+%   X: matrix of (time x nodes) for either V or H
 % OUTPUTS:
-%   Dv: the indices of the death nodes in V
-%   Dh: (optional) indices of death nodes in H
+%   D: the indices of dead nodes in X
 
-% X is of dimension (time x nodes) so num nodes is size(X)(2)
-S = size(X);
-N = S(2);
-Nh = N/2;
+% tolerance for `death'
+tol=1e-7;
 
-% separate for convenience
-V = X(:,1:Nh);
-H = X(:,Nh+1:N);
+% X is of dimension (time x nodes)
+N = size(X,2);
 
-% discard burn-in/transients
-V = V(3*end/4:end);
-H = H(3*end/4:end);
+% transients discarded previously
 
-% look for death and record where you find it
-for n = 1:Nh
-    if abs(mean(V(1:end,n))) < 1e-7
-        Dv = [Dv;n];
-    end
-    if abs(mean(H(1:end,n))) < 1e-7
-        Dh = [Dh;n];
-    end
+% look for Death and record where you find it
+D=1:N;
+D=D(mean(abs(X)) < tol);
+
 end
-
-varargout = Dh;
-end
-
