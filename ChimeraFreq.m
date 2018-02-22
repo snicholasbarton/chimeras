@@ -44,82 +44,124 @@ x0(147:166) = 0.05;
 x0(147:166) = x0(147:166) + 0.25*rand(20,1);
 x0(167:200) = 0.09;
 
-% solve the ode
+%%%%%%%%%%%% solve the ODE %%%%%%%%%%
 
-[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @linear_coupling), 0:6000, x0);
+opts = odeset('RelTol',1e-9,'AbsTol',1e-9);
+[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @linear_coupling), 0:6000, x0, opts);
 
 %%%%%%%%%%%% organise data %%%%%%%%%%
 
 mask = T > 5000 & T <= 6000;
 
 V=X(:,1:N);
-H=X(:,N+1:2*N);
 
 T=T(mask);
 V=V(mask,:);
+Vc=V-mean(V);
 
+%%%%%%%%%%%%% find dominating frequencies %%%%%%%%%% 
 
-%%%%%%%%%%%%% classification %%%%%%%%%% 
+Vc=V-mean(V); % center all the vegetation at the nodes
 
-maxpeak=3;
-peakstol=0.01;
+maxpeak=3; % number of peaks to take into account
+peakstol=0.01; % min height of peak to take into account 
 
-M=size(V,1);
-w=fft(V);
+M=size(Vc,1); 
+w=fft(Vc); % take fast fourier of Vc at all nodes in time
 
-fshift=(-(M-1)/2:(M+1)/2-1)/range(T);
-yshift= abs(fftshift(w,1));
+fshift=(-(M-1)/2:(M+1)/2-1)/range(T); % create frequency axis (horizontal)
+yshift= abs(fftshift(w,1)); % shift fft vector 
 
-yshift=yshift(fshift>0,:);
+% take only positive frequencies
+yshift=yshift(fshift>0,:); 
 fshift=fshift(fshift>0);
 
-% figure()
-% plot(fshift,yshift);
+% create matrix of (N x maxpeak) that will contain the dominating
+% frequencies
 
-freqvec=zeros(N,maxpeak);
+freqvec=zeros(N,maxpeak); % allocate 
 
 for i = 1:N
     
-    [pks,locs] = findpeaks(yshift(:,i));
-    pks=pks(pks>peakstol);
-    locs=locs(pks>peakstol);
+    [pks,locs] = findpeaks(yshift(:,i)); %find the peaks (frequencies)
     
+    % cancel noise / keep only high intensity peaks
+    locs=locs(pks>peakstol); % index of peaks
+    pks=pks(pks>peakstol); % intensity of peaks
+    freqs=fshift(locs); %frequency at peaks
+    
+    % sort frequencies in order of intensity
     [pks,I] = sort(pks,'descend');
+    freqs=freqs(I);
     
-    peaks=fshift(locs);
-    peaks=peaks(I);
-    
-    if length(peaks)>maxpeak-1
-        freqvec(i,:)=peaks(1:maxpeak);
+    % take only maxpeak number of frequencies and store in freqvec
+    if length(freqs)>maxpeak-1
+        freqvec(i,:)=freqs(1:maxpeak);
     else
-        freqvec(i,1:length(peaks))=peaks(1:length(peaks));
+        freqvec(i,1:length(freqs))=freqs(1:length(freqs));
     end
         
-    
 end
 
+%%%%%%%%%%%%% CLASSIFICATION %%%%%%%%%% 
 
-if sum(std(freqvec))<10^(-4)
-    freqvec2=freqvec(1,:);
-    if any(freqvec2)==0
-        state=1;
+if sum(std(freqvec))<10^(-4) % if all nodes have the same frequencies
+    freqvec2=freqvec(1,:); % consider only first node
+    
+    if any(freqvec2)==0 % if the frequencies are all 0 
+        state=1; 
         disp('CD')
+        
+        % check steady states
+        s=V(1,:);
+        if max(s) < 0.01 
+            disp('all steady states are dead')
+        elseif min(s) > 0.01 
+            disp('all steady states are alive')
+        else
+            disp('steady states are mixed') 
+        end
+    
     else 
         state=2;
         disp('sync')
     end
+
+    
 elseif sum(std(freqvec(any(freqvec,2),:)))<10^(-4)
     state=3;
     disp('CSOD')
-else
+    
+    s=V(1,any(freqvec,2)==0); % take first time vec of steady states nodes
+    if max(s) < 0.01 % if all the nodes are 0 
+        disp('all steady states are dead')
+    elseif min(s) > 0.01 % if none of the nodes are 0
+        disp('all steady states are alive')
+    else % if some are zero and some are not
+        disp('steady states are mixed') 
+    end
+    
+    
+else % if the frequencies are not syncronised
     state=4;
     disp('Non-Sync')
 end
 
+%%%%%%%%%%%%%%%%% PLOTS %%%%%%%%%%%%%%%%%%%%
 
+% % plot frequencies
+% figure()
+% plot(fshift,yshift);
+% xlabel('frequency','Interpreter','latex')
+% ylabel('intensity','Interpreter','latex')
+% title('Frequencies of $H$','Interpreter','latex')
+% 
+% % plot vegetation 
 % figure()
 % plot(V)
-    
+% xlabel('timestep','Interpreter','latex')
+% ylabel('$V$ vegetation for $100$ nodes','Interpreter','latex')
+% title('Behaviour of $V$ at each node','Interpreter','latex')
 end
 
 
