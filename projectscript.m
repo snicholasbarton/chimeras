@@ -6,8 +6,10 @@ N = 100; % number of nodes in the graph
 P = 1; % adjacency bandwidth
 e = 10; %number of edges of random matrix
 
-A=makeAdjMat(N,'random',e);
+A=makeAdjMat(N,'ring',P);
 % A=makeAdjMat(N,'ring',P);
+
+diag(A)=zeros(size(A,1),1);
 
 
 % parameter values
@@ -41,52 +43,57 @@ x0(167:200) = 0.09;
 
 
 % solve the ode
-[T, X] = ode45(@(t, x) RMoscillator(x, params, A), 0:6000, x0);
+opts = odeset('RelTol',1e-9,'AbsTol',1e-9);
+[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @linear_coupling), 0:6000, x0, opts);
 
 
 % plot the results
 mask = find(T > 5000 & T < 5500);
 
 
-%network plot
-figure()
-networkPlot(A, X) %This plots the population data as a network graph
+% %network plot
+% figure()
+% networkPlot(A, X) %This plots the population data as a network graph
 
 V=X(:,1:N);
 H=X(:,N+1:2*N);
 
-% limit cycle
-figure()
-Vsum=sum(X(:,1:N),2);
-Hsum=sum(X(:,N+1:2*N),2);
-plot(Vsum(mask),Hsum(mask), 'LineWidth', 1.5) % phase plane
 
-% colour plots - top is vegetation, bottom is herbivores
-figure()
-colorbar
+ChimeraFreq2(V(mask,:),T(mask),A)
 
-subplot(2,1,1)
-imagesc(V(mask,:))
-xlabel('$$i$$','Interpreter','latex')
-ylabel('$$t$$','Interpreter','latex')
-title('$$V$$ spatiotemporal colour map','Interpreter','latex')
 
-subplot(2,1,2)
-imagesc(H(mask,:))
-xlabel('$$i$$','Interpreter','latex')
-ylabel('$$t$$','Interpreter','latex')
-title('$$H$$ spatiotemporal colour map','Interpreter','latex')
-
-figure()
-subplot(2,1,1)
-plot(T(mask),V(mask,:))
-xlabel('time step','Interpreter','latex')
-title('$$V$$ behaviour','Interpreter','latex')
-
-subplot(2,1,2)
-plot(T(mask),H(mask,:))
-xlabel('time step','Interpreter','latex')
-title('$$H$$ behaviour','Interpreter','latex')
+% % limit cycle
+% figure()
+% Vsum=sum(X(:,1:N),2);
+% Hsum=sum(X(:,N+1:2*N),2);
+% plot(Vsum(mask),Hsum(mask), 'LineWidth', 1.5) % phase plane
+% 
+% % colour plots - top is vegetation, bottom is herbivores
+% figure()
+% colorbar
+% 
+% subplot(2,1,1)
+% imagesc(V(mask,:))
+% xlabel('$$i$$','Interpreter','latex')
+% ylabel('$$t$$','Interpreter','latex')
+% title('$$V$$ spatiotemporal colour map','Interpreter','latex')
+% 
+% subplot(2,1,2)
+% imagesc(H(mask,:))
+% xlabel('$$i$$','Interpreter','latex')
+% ylabel('$$t$$','Interpreter','latex')
+% title('$$H$$ spatiotemporal colour map','Interpreter','latex')
+% 
+% figure()
+% subplot(2,1,1)
+% plot(T(mask),V(mask,:))
+% xlabel('time step','Interpreter','latex')
+% title('$$V$$ behaviour','Interpreter','latex')
+% 
+% subplot(2,1,2)
+% plot(T(mask),H(mask,:))
+% xlabel('time step','Interpreter','latex')
+% title('$$H$$ behaviour','Interpreter','latex')
 
 
 

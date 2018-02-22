@@ -141,6 +141,34 @@ elseif sum(std(freqvec(any(freqvec,2),:)))<10^(-4)
         disp('steady states are mixed') 
     end
     
+elseif 1
+    freqvec2=freqvec(any(freqvec,2)==0,1); % get rid of the steady states
+    
+    
+    [n, bin] = histc(freqvec2, uniquetol(A,1e-4));
+    multiplevec = find(n > 1);
+    for i =1:length(multiplevec)
+        multiple=multiplevec(i);
+        index = find(ismember(bin, multiple));
+        
+        if any(A(index, index))==1
+            break
+            disp('frequency chimera')
+        end
+    end
+        
+    
+    [uniqueFreq, IA, IC] = uniquetol(freqvec2,1e-4);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 else % if the frequencies are not syncronised
     state=4;
