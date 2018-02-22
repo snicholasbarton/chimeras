@@ -12,9 +12,8 @@ function state = classify(T,X,A)
 %%%%%%%%%%%%% Set up the problem and format our data correctly %%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% X is of dimension (time x nodes) so num nodes is size(X)(2)
-S = size(X);
-N = S(2);
+% X is of dimension (time x nodes * 2) so num nodes Nh is size(X)(2)/2
+N = size(X,2);
 Nh = N/2;
 
 % separate for convenience
@@ -22,60 +21,65 @@ V = X(:,1:Nh);
 
 % discard burn-in/transients
 V = V(round(3*end/4):end,:);
+T = T(round(3*end/4):end,:);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Find the different states and initialise flags of identified states %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % find death states indices
-Dv = find_death(V);
+Dv = find_death(V); % dead steady states
 
 % find non-zero steady states indices
-all_SSv = find_SS(V); % finds all steady states
-SSv = setdiff(all_SSv,Dv); % just non-zero steady states
+SSv = find_SS(V); % all steady states
+NZSSv = setdiff(SSv,Dv); % non-zero steady states
 
 % make a non-steady V
-steadys = union(Dv,SSv);
-non_steadys_indices = setdiff(1:100,steadys);
+
+non_steadys_indices = setdiff(1:100,SSv);
 non_steadys = V(:,non_steadys_indices);
 
 % find chaotic nodes/indices
-Zv = find_chaos(V);
+% Zv = find_chaos(V);
+Zv=[];
+
 
 % flags: 1 if state exists in V, 0 if it does not
 sync_flag = 0;
 death_flag = ~isempty(Dv);
-steady_flag = ~isempty(SSv);
+NZsteady_flag = ~isempty(NZSSv);
 chaos_flag = ~isempty(Zv);
+
 FC_flag = 0;
 AC_flag = 0;
 
 % number of nodes exhibiting non-oscillatory behaviour, to reduce
 % computational burden
 N_dead = length(Dv);
-N_steady = length(SSv);
+N_steady = length(NZSSv);
 N_chaotic = length(Zv);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%% Classify states via enumeration %%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if N_dead == 100
+if N_dead == Nh
     state = 1; % death
-elseif N_steady == 100
+elseif N_steady == Nh
     state = 2; % nonzero-steady
-elseif N_dead + N_steady == 100
+    disp('hey')
+elseif N_dead + N_steady == Nh
     state = 3; % nonzero-steady and death
-elseif N_chaotic == 100
+elseif N_chaotic == Nh
     state = 4; % chaos
-elseif N_dead + N_chaotic == 100
+elseif N_dead + N_chaotic == Nh
     state = 5; % chaos and death
-elseif N_steady + N_chaotic == 100
+elseif N_steady + N_chaotic == Nh
     state = 6; % chaos and nonzero-steady
-elseif N_dead + N_steady + N_chaotic == 100
+elseif N_dead + N_steady + N_chaotic == Nh
     state = 7; % chaos and nonzero-steady and death
 else % we need to check the oscillating nodes
     % find the dominant frequencies in the data
-    freqvec = dominating_freqs(T,non_steadys);
-    freqstates_flag = classify_freqs(freqvec,A,non_steadys_indices);
+    
+    freqstates_flag = Find_FC(non_steadys,T,A,non_steadys_indices);
     
     if freqstates_flag == 1
         sync_flag = 1;
@@ -83,19 +87,20 @@ else % we need to check the oscillating nodes
         FC_flag = 1;
     end
     
+    
     AC_flag = find_ac(non_steadys,A,non_steadys_indices);
     
     % vile, vile switches for sync + no FC/AC
     if sync_flag
         if death_flag
-            if steady_flag
+            if NZsteady_flag
                 if chaos_flag
                     state = 36;
                 end
                 state = 35;
             end
             state = 32;
-        elseif steady_flag
+        elseif NZsteady_flag
             if chaos_flag
                 state = 37;
             end
@@ -106,11 +111,19 @@ else % we need to check the oscillating nodes
             end
             state = 34;
         end
-    end
+    else
     % run the frequency classification
-    state = flags2state([AC_flag;FC_flag;chaos;steady_flag;death_flag]);
-end
-
+    
+    state = flags2state([AC_flag;FC_flag;chaos_flag;NZsteady_flag;death_flag]);
+    end
+    
+    
+figure()
+plot(V)
+xlabel('timestep','Interpreter','latex')
+ylabel('$V$ vegetation for $100$ nodes','Interpreter','latex')
+title('Behaviour of $V$ at each node','Interpreter','latex')
+    
 end
 
 % % enumeration of different states
