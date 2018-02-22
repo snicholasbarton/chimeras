@@ -61,6 +61,9 @@ N_chaotic = length(Zv);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%% Classify states via enumeration %%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+state=0;
+
 if N_dead == Nh
     state = 1; % death
 elseif N_steady == Nh
@@ -118,11 +121,11 @@ else % we need to check the oscillating nodes
     end
     
     
-figure()
-plot(V)
-xlabel('timestep','Interpreter','latex')
-ylabel('$V$ vegetation for $100$ nodes','Interpreter','latex')
-title('Behaviour of $V$ at each node','Interpreter','latex')
+% figure()
+% plot(V)
+% xlabel('timestep','Interpreter','latex')
+% ylabel('$V$ vegetation for $100$ nodes','Interpreter','latex')
+% title('Behaviour of $V$ at each node','Interpreter','latex')
     
 end
 

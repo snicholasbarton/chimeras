@@ -61,8 +61,6 @@ state=0; % no state
 
 % assuming it is not CD
 
-freqvec
-
 if max(std(freqvec))<10^(-1) % if all nodes have the same frequencies
     state=1; % sync
 else 
