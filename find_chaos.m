@@ -5,16 +5,16 @@ function Z = find_chaos(X)
 % OUTPUTS:
 %   Z: the indices of the chaotic nodes in X
 
-% X is of dimension (time x nodes)
+% X is size (time x num. nodes)
 N = size(X,2);
 
 % transients discarded previously
+Z = []; % initialise Z
 
 % look for chaos and record where you find it
 for n = 1:N
-    chaos_Vn = z1test(V(1:100:end,n));
-    chaos_Hn = z1test(H(1:100:end,n));
-    if abs(1 - chaosVn) < 0.15
+    chaos_Xn = z1test(X(1:100:end,n));
+    if abs(1 - chaos_Xn) < 0.15
         Z = [Z;n];
     end
 end

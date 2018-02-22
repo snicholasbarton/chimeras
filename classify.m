@@ -19,12 +19,9 @@ Nh = N/2;
 
 % separate for convenience
 V = X(:,1:Nh);
-H = X(:,Nh+1:N);
 
 % discard burn-in/transients
-V = V(3*end/4:end);
-H = H(3*end/4:end);
-
+V = V(round(3*end/4):end,:);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Find the different states and initialise flags of identified states %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -73,7 +70,7 @@ elseif N_dead + N_chaotic == 100
     state = 5; % chaos and death
 elseif N_steady + N_chaotic == 100
     state = 6; % chaos and nonzero-steady
-elseif N_death + N_steady + N_chaotic == 100
+elseif N_dead + N_steady + N_chaotic == 100
     state = 7; % chaos and nonzero-steady and death
 else % we need to check the oscillating nodes
     % find the dominant frequencies in the data
