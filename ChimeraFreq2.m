@@ -1,6 +1,8 @@
 function state = ChimeraFreq2(V,T,A)
 % function that checks if there is sync or freq-chimera or neither in the
 % non steady states
+
+% NOTE: function can be run only after you check its not CD
     
 % state 1: Sync       
 % state 2: Freq-Chimera
