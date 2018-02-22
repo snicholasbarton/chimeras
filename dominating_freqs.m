@@ -1,25 +1,26 @@
-function freqvec = dominating_freqs(X)
+function freqvec = dominating_freqs(T,X)
 %dominating_freqs Finds the dominating frequencies in a set of nodes X
 % INPUTS:
-%   X: matrix of (time x nodes) for either V or H
+%   T: the time vector over which X is measured
+%   X: matrix of (time-index x nodes) for either V or H
 % OUTPUTS:
 %   freqvec: a sorted array of the dominant frquencies in X
 
-% number of nodes
+% number of nodes, length of V
 N = size(X,2);
+M = size(X,1);
 
 % transients already discarded
 
-Xc=X-mean(X); % center the `amplitude' of the nodes
+Xc = X-mean(X); % center the `amplitude' of the nodes
 
-maxpeak=3; % number of peaks to take into account
-peakstol=0.01; % min height of peak to take into account 
+maxpeak = 3; % number of peaks to take into account
+peakstol = 0.01; % min height of peak to take into account 
 
-M=size(Vc,1); 
-w=fft(Vc); % take fast fourier of X at all nodes in time
+w = fft(Xc); % take fast fourier of X at all nodes in time
 
-fshift=(-(M-1)/2:(M+1)/2-1)/range(T); % create frequency axis (horizontal)
-yshift= abs(fftshift(w,1)); % shift fft vector 
+fshift = (-(M-1)/2:(M+1)/2-1)/range(T); % create frequency axis (horizontal)
+yshift = abs(fftshift(w,1)); % shift fft vector 
 
 % take only positive frequencies
 yshift=yshift(fshift>0,:); 
