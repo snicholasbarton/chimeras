@@ -10,6 +10,7 @@ function freq_state_flag = classify_freqs(freqvec, A, I)
 freq_state_flag = 0; % default behaviour has no synchrony
 
 % we've removed steady states from the input
+freqvec2=freqvec;
 
 if max(std(freqvec2)) < 10^(-4) % if all nodes have the same frequencies
     freq_state_flag = 1; % sync
@@ -24,7 +25,7 @@ else
         logical = A(index2,index2);
         logical = logical(:);
         
-        if any(A(index, index))==1
+        if any(A(logical))==1
             freq_state_flag = 2; % frequency chimera
             break
         end

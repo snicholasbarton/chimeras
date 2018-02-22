@@ -108,7 +108,7 @@ else % we need to check the oscillating nodes
         end
     end
     % run the frequency classification
-    state = flags2state([AC_flag;FC_flag;chaos;steady_flag;death_flag]);
+    state = flags2state([AC_flag;FC_flag;chaos_flag;steady_flag;death_flag]);
 end
 
 end
