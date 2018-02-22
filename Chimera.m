@@ -1,4 +1,4 @@
-function [state,X] = Chimera(P,sigma)
+function state = Chimera(P,sigma,coupling)
 %Chimera A function that takes a given P, sigma and determines what state
 %the resulting set of V nodes is in
 % INPUTS:
@@ -30,7 +30,7 @@ load('x0') %fixed random initial conditions
 
 %%%%%%%%%%% solve the ode %%%%%%%%%%%%%%
 options = odeset('RelTol',1e-9,'AbsTol',1e-9);
-[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @linear_coupling), 0:0.5:3000, x0);
+[T, X] = ode45(@(t, x) RMoscillator(x, params, A, coupling), 0:0.5:3000, x0);
 
 %%%%%%%%%%%%% classify what state the system is in %%%%%%%%%%
 state = classify(T,X,A);
