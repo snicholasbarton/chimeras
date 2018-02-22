@@ -1,0 +1,41 @@
+function state = find_ac(V,A,I)
+
+% function that checks if there is amp chimera
+
+% V: only oscillating nodes
+% I: indeces of oscillating nodes
+
+% NOTE: function can be run only after you check its not CD
+    
+% state 1: Yes      
+% state 0: No
+
+N=size(V,2);
+
+%%%%%%%%%%%%% CLASSIFICATION %%%%%%%%%% 
+
+amplvec=range(V);
+
+
+state=0;
+
+if range(amplvec)>10^(-4) % if all nodes have the same amp
+    [n, bin] = histc(amplvec, uniquetol(amplvec,1e-4));
+    multiplevec = find(n > 1);
+    
+    for i =1:length(multiplevec)
+        multiple=multiplevec(i);
+        index2 = I(ismember(bin, multiple));
+        
+        logical=A(index2,index2);
+        
+        logical=logical(:);
+        
+        if any(logical)==1
+            state=1; % amp chimera
+            break
+        end
+    end
+end
+
+end
