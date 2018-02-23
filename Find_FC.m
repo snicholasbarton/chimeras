@@ -17,7 +17,6 @@ M=size(V,1);
 Vc=V-mean(V); % center all the vegetation at the nodes
 
 maxpeak=1; % number of peaks to take into account
-peakstol=0.01; % min height of peak to take into account 
  
 w=fft(Vc); % take fast fourier of Vc at all nodes in time
 
@@ -36,10 +35,7 @@ freqvec=zeros(N,maxpeak); % allocate
 for i = 1:N
     
     [pks,locs] = findpeaks(yshift(:,i)); %find the peaks (frequencies)
-    
-    % cancel noise / keep only high intensity peaks
-    locs=locs(pks>peakstol); % index of peaks
-    pks=pks(pks>peakstol); % intensity of peaks
+
     freqs=fshift(locs); %frequency at peaks
     
     % sort frequencies in order of intensity
@@ -69,7 +65,7 @@ else
     multiplevec = find(n > 1);
     for i =1:length(multiplevec)
         multiple=multiplevec(i);
-
+        
         index2 = I(ismember(bin, multiple));
         
         logical=A(index2,index2);
