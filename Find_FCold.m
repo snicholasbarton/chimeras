@@ -1,4 +1,4 @@
-function state = Find_FC(V,T,A,I)
+function state = Find_FCold(V,T,A,I)
 % function that checks if there is sync or freq-chimera or neither in the
 % non steady states
 
