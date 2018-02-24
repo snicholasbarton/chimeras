@@ -38,6 +38,7 @@ NZSSv = setdiff(SSv,Dv); % non-zero steady states
 non_steadys_indices = setdiff(1:100,SSv);
 non_steadys = V(:,non_steadys_indices);
 
+
 % find chaotic nodes/indices
 % Zv = find_chaos(V);
 Zv=[];
@@ -50,7 +51,6 @@ NZsteady_flag = ~isempty(NZSSv);
 chaos_flag = ~isempty(Zv);
 
 FC_flag = 0;
-AC_flag = 0;
 
 % number of nodes exhibiting non-oscillatory behaviour, to reduce
 % computational burden
