@@ -5,7 +5,7 @@ function D = find_death(X)
 % OUTPUTS:
 %   D: the indices of dead nodes in X
 
-% tolerance for `death'
+% tolerance for death
 tol=1e-7;
 
 % X is of dimension (time x nodes)

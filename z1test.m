@@ -24,10 +24,10 @@ end
 %  plot(t,M);xlabel('t');ylabel('M')
 
 % Two crude attempts to check for oversampling:
-if (max(x)-min(x) )/mean(abs(diff(x))) > 10 | ...
-       median(kcorr(c<mean(c))) - median(kcorr(c>mean(c))) > 0.5
-   disp('Warning: data is probably oversampled.')
-   disp('Use coarser sampling or reduce the maximum value of c.')
-end
+% if (max(x)-min(x) )/mean(abs(diff(x))) > 10 | ...
+%        median(kcorr(c<mean(c))) - median(kcorr(c>mean(c))) > 0.5
+%    %disp('Warning: data is probably oversampled.')
+%    %disp('Use coarser sampling or reduce the maximum value of c.')
+% end
 
 kmedian=median(kcorr);

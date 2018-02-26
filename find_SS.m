@@ -6,7 +6,7 @@ function SS = find_SS(X)
 %   SS: the indices of the SS nodes in X
 
 % tolerance for `steadiness'
-tol=1e-7;
+tol=1e-4;
 
 % X is of dimension (time x nodes)
 N = size(X,2);
