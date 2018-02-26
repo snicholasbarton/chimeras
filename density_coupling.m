@@ -25,13 +25,12 @@ sigma = params(7);
 P = params(8);
 
 shape=1;
-maxd=0.5;
-hS=22;
+maxd=5;
+hS=2;
 D=@(H) maxd.*H.^(shape)./(hS.^shape+H.^shape);
 
 % differential equations for V, H;
 
 HD = H.*D(H);
 couple_strength = sigma/(2*P).*(A*HD - diag(HD)*A*ones(N,1));
-
 end

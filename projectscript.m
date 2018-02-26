@@ -1,11 +1,9 @@
 % build the network
 
 N = 100; % number of nodes in the graph
-P = 15; % adjacency bandwidth
+P = 10; % adjacency bandwidth
 
-A = makeAdjMat(N, 'ring', P);
-
-
+A = makeAdjMat(N, 'sqlattice', P);
 
 % parameter values
 r = 0.5; % growth rate of prey
@@ -14,7 +12,7 @@ alpha = 1; % predation rate
 B = 0.16; % half-saturation constant
 beta = 0.5; % prey efficiency
 m = 0.2; % mortality of prey
-sigma = 1.3; % coupling strength
+sigma = 7; % coupling strength
 
 params = [r K alpha B beta m sigma P]; % vectorise the parameters
 
@@ -36,9 +34,9 @@ params = [r K alpha B beta m sigma P]; % vectorise the parameters
 % x0(167:200) = 0.09;
 
 load('x0');
-
 % solve the ode
-[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @density_coupling), 0:6000, x0);
+opts = odeset('AbsTol', 1e-9, 'RelTol', 1e-9);
+[T, X] = ode45(@(t, x) RMoscillator(x, params, A, @linear_coupling), 0:6000, x0, opts);
 
 % plot the results
 
@@ -84,29 +82,29 @@ xlabel('$$i$$','Interpreter','latex')
 ylabel('$$t$$','Interpreter','latex')
 title('$$H$$ spatiotemporal colour map','Interpreter','latex')
 
-dev=std(Y(:,1:N));
-flag1=0;
-flag2=0;
+dev=std(Y(:,1:N)); % Y veg Z herbivore
+if max(dev) < 0.01       % if all sd are 0 / all steady states
+    state=1; 
+    disp([P sigma]);
+    disp('CD');
 
-for i=1:N
-    if(dev(i)<0.01) 
-        flag1=1;
+elseif min(dev) > 0.01   % if all sd are non-0 / no steady states
+    state=3; 
+    disp([P sigma]);
+    disp('Sync');
+
+else                     % some oscillatory & some steady states
+    sdrange=range(dev(dev>sqrt(eps)));
+    
+    if sdrange>0.1*max(dev)
+        state=4; 
+        disp([P sigma]);
+        disp('AC+Death');   
+    else
+        state=2; 
+        disp([P sigma]);
+        disp('CSOD');
     end
-    if(dev(i)>0.01)
-        flag2=1;
-    end
-end
-
-if flag1==1 && flag2 ==0
-    state=1; % CD all zero SD
-end
-
-if flag1==1 && flag2 ==1
-    state=2; % CSOD mixed zero sd and nonzero sd
-end
-
-if flag1==0 && flag2 ==1
-    state=3; % Sync oscillation all nonzero sd
 end
 
 

@@ -22,9 +22,10 @@ else
 
         case 'sqlattice'
             rN = sqrt(N);
-            if (mod(rN,1) ~= 1 || N < 9) %check inputs
+            if (mod(rN,1) ~= 0 || N < 9) %check inputs
                 disp('N must be a square number and at least 9 for sqlattice topology')
                 disp('Using N = 9')
+                N = 9;
             end
             A = zeros(N,N);
             

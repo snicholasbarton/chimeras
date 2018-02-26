@@ -1,7 +1,7 @@
 %plot a bifurcation diagram over the parameters P and sigma
 
-p=1:5:40;
-all_sigma=linspace(1,3.5,length(p));
+p=1:1:40;
+all_sigma=linspace(0,3.5,length(p));
 state=zeros(length(p));
 
 for i=1:length(p)
