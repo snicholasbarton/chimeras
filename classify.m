@@ -96,7 +96,7 @@ else % we need to check the oscillating nodes
     
     AC_flag = 0; %default
     
-    if exist('n', 'var')
+    if n ~= 0
         
         banks = sepFreqs(n,bin,non_steadys_non_chaotic_indices);
 

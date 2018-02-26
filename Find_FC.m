@@ -1,4 +1,4 @@
-function [state, varargout] = Find_FC(freqvec,A,I)
+function [state, n, bin] = Find_FC(freqvec,A,I)
 % function that checks if there is sync or freq-chimera or neither in the
 % non steady states
 
@@ -18,6 +18,8 @@ state=0; % no state
 
 if range(freqvec)<0.05*max(freqvec) % if all nodes have the same frequencies
     state=1; % sync
+    n = 0;
+    bin = 0;
 else 
     [n, bin] = histc(freqvec, uniquetol(freqvec,1e-4));
     multiplevec = find(n > 1);
@@ -34,8 +36,6 @@ else
             break
         end
     end
-    varargout{1} = n;
-    varargout{2} = bin;
 end
 
 
