@@ -1,38 +1,40 @@
-function freqvec = findFreqs(V,T)
-N=size(V,2);
-M=size(V,1); 
+function freqvec = findFreqs(X,T)
+%findFreqs Finds the frequencies at which the given nodes are oscillating
+% INPUTS:
+%   X: array of size (time x nodes) of the nodes
+%   T: time at which each node is evaluated
+% OUTPUTS:
+%   freqvec: vector containing dominant frequency of each node
+N = size(X,2);
+M = size(X,1); 
 
-%%%%%%%%%%%%% find dominating frequencies %%%%%%%%%% 
-
-Vc=V-mean(V); % center all the vegetation at the nodes
+Xc = X-mean(X); % center the nodes to mean zero
  
-w=fft(Vc); % take fast fourier of Vc at all nodes in time
+w = fft(Xc); % take fast fourier of Xc at all nodes in time
 
-fshift=(-(M-1)/2:(M+1)/2-1)/range(T); % create frequency axis (horizontal)
-yshift= abs(fftshift(w,1)); % shift fft vector 
+fshift = (-(M-1)/2:(M+1)/2-1)/range(T); % create frequency axis
+yshift = abs(fftshift(w,1)); % shift fft vector 
 
 % take only positive frequencies
-yshift=yshift(fshift>0,:); 
-fshift=fshift(fshift>0);
+yshift = yshift(fshift > eps,:); 
+fshift = fshift(fshift > eps);
 
 % create matrix of (N x maxpeak) that will contain the dominating
 % frequencies
-
-freqvec=zeros(N,1); % allocate 
+freqvec = zeros(N,1); % allocate 
 
 for i = 1:N
-    
     [pks,locs] = findpeaks(yshift(:,i)); %find the peaks (frequencies)
 
-    freq=fshift(locs); %frequency at peaks
+    freq = fshift(locs); %frequency at peaks
     
     % take maximum peak and find corresponding frequency 
-    [pk,Ind]=max(pks);
-    freq=freq(Ind);
+    [~,Ind] = max(pks);
+    freq = freq(Ind);
     
     % take only maxpeak number of frequencies and store in freqvec
     
-    freqvec(i)=freq;
+    freqvec(i) = freq;
         
 end
 end

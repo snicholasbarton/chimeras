@@ -20,8 +20,8 @@ Nh = N/2;
 V = X(:,1:Nh);
 
 % discard burn-in/transients
-V = V(round(end/2):end,:);
-T = T(round(end/2):end,:);
+V = V(round(3*end/4):end,:);
+T = T(round(3*end/4):end,:);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Find the different states and initialise flags of identified states %%%
@@ -39,7 +39,8 @@ Zv = find_chaos(V);
 
 % V with steadys, chaos removed
 % non_steadys_indices = setdiff(1:100,SSv);
-non_steadys_non_chaotic_indices = setdiff(setdiff(1:100,Zv),SSv);
+% non_chaotic_indices = setdiff(1:100,Zv);
+non_steadys_non_chaotic_indices = setdiff(1:100,union(Zv,SSv));
 % non_steadys = V(:,non_steadys_indices);
 non_steadys_non_chaotic = V(:,non_steadys_non_chaotic_indices);
 

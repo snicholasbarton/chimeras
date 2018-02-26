@@ -4,14 +4,13 @@ sigma_vec = 0:0.1:7;
 
 state = zeros(length(P_vec), length(sigma_vec));
 
-for i = 1:length(P_vec)
-    P = P_vec(i);
+for P = P_vec
     for j = 1:length(sigma_vec)
         sigma = sigma_vec(j);
         % CHANGE YOUR COUPLING RULE HERE
-        state(i,j) = Chimera(P,sigma,@interaction_coupling);
+        state(P,j) = Chimera(P,sigma,@linear_coupling);
     end
-    save('interaction_bifurcation.mat','state')
+    save('linear_bifurcation.mat','state')
 end
 
 % CHANGE THE NAME OF THE FILE HERE TO THE NAME OF YOUR COUPLING
