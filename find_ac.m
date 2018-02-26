@@ -5,7 +5,7 @@ function state = find_ac(X,A,I)
 %   A: adjacency matrix of the network
 %   I: the indices of the nodes included in X
 % OUTPUTS:
-%   state: 1 if there is a frequency chimera, 0 o/w
+%   state: 1 if there is a amplitude chimera, 0 o/w
 
 amplvec = range(X);
 

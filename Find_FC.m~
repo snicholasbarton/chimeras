@@ -1,4 +1,4 @@
-function [state, varargout] = Find_FC(freqvec,A,I)
+function [state, n, bin] = Find_FC(freqvec,A,I)
 % function that checks if there is sync or freq-chimera or neither in the
 % non steady states
 
@@ -34,8 +34,6 @@ else
             break
         end
     end
-    varargout{1} = n;
-    varargout{2} = bin;
 end
 
 

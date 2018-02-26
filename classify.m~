@@ -101,7 +101,7 @@ else % we need to check the oscillating nodes
         banks = sepFreqs(n,bin,non_steadys_non_chaotic_indices);
 
         for i = 1:length(banks)
-            if find_ac(V(:,banks{i}),A,banks{i}) == 1
+            if find_ac(non_steadys_non_chaotic(banks{i}),A,banks{i}) == 1
                 AC_flag = 1;
                 break
             end
