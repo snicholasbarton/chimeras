@@ -28,8 +28,12 @@ else
             else
                 P=floor(param);
             end
-
-            Adj = toeplitz([0,ones(1,P),zeros(1,N-2*P-1),ones(1,P)]); % adjacency matrix
+            
+            if P == N/2
+                Adj = toeplitz([0,ones(1,N-1)]);
+            else
+                Adj = toeplitz([0,ones(1,P),zeros(1,N-2*P-1),ones(1,P)]);
+            end
 
         % TODO: ADD P DEPENDENCY
         case 'sqlattice'
@@ -97,7 +101,13 @@ else
                 P=floor(param);
             end
             
-            Adj = toeplitz([0,ones(1,P),zeros(1,N-2*P-1),zeros(1,P)]); % adjacency matrix
+            if P == N/2
+                Adj = toeplitz([0,ones(1,P),zeros(1,N-P-1)]);
+            else
+                Adj = toeplitz([0,ones(1,P),zeros(1,N-2*P-1),zeros(1,P)]);
+            end
+            
+            
             
         case 'random'
             
