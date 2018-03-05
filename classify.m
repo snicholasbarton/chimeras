@@ -152,3 +152,5 @@ end
 % 37: sync and chaos and death
 % 38: sync and chaos and nonzero-steady
 % 39: sync and chaos and nonzero-steady and death
+% 40: synchronised chaos and chaos (manual)
+% 41: synchronised chaos and non-zero steady (manual)
