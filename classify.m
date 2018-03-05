@@ -90,7 +90,12 @@ else % we need to check the oscillating nodes
     end
     
     % and now check for AC in the bins
-    if n ~= 0   
+    if sync_flag == 1
+        if find_ac(non_steadys_non_chaotic,A,non_steadys_non_chaotic_indices) == 1
+            sync_flag = 0; % we can't have sync if there's AC!
+            AC_flag = 1;
+        end
+    elseif FC_flag == 1
         banks = sepFreqs(n,bin,non_steadys_non_chaotic_indices);
         for i = 1:length(banks)
             if find_ac(V(:,banks{i}),A,banks{i}) == 1

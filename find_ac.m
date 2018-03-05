@@ -11,7 +11,7 @@ amplvec = range(X);
 
 state = 0;
 
-if range(amplvec) > 10^(-4) % if there is more than one amplitude
+if range(amplvec) > 0.1*max(amplvec) % if there is more than one amplitude
     [n, bin] = histc(amplvec, uniquetol(amplvec,1e-4));
     multiplevec = find(n > 1);
     
