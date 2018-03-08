@@ -19,6 +19,8 @@ Nh = N/2;
 % separate for convenience
 V = X(:,1:Nh);
 
+
+
 % discard burn-in/transients
 V = V(round(3*end/4):end,:);
 T = T(round(3*end/4):end,:);
@@ -34,15 +36,16 @@ Dv = find_death(V); % dead steady states
 SSv = find_SS(V); % all steady states
 NZSSv = setdiff(SSv,Dv); % non-zero steady states
 
-% find chaotic nodes/indices
-Zv = find_chaos(V);
+non_steady_indeces = setdiff(1:100,SSv);
 
-% V with steadys, chaos removed
-% non_steadys_indices = setdiff(1:100,SSv);
-% non_chaotic_indices = setdiff(1:100,Zv);
+% find chaotic nodes/indices
+Zv = find_chaos(V(:,non_steady_indeces));
+% Zv=[];
+
 non_steadys_non_chaotic_indices = setdiff(1:100,union(Zv,SSv));
-% non_steadys = V(:,non_steadys_indices);
+
 non_steadys_non_chaotic = V(:,non_steadys_non_chaotic_indices);
+
 
 % flags: 1 if state exists in V, 0 if it does not
 sync_flag = 0;
@@ -57,6 +60,7 @@ FC_flag = 0;
 N_dead = length(Dv);
 N_steady = length(NZSSv);
 N_chaotic = length(Zv);
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%% Classify states via enumeration %%%%%%%%%%%%%%%%%%%%%
