@@ -28,8 +28,8 @@ couple_strength = zeros(N,1);
 for i = 1:N
     for j = 1:N
         if A(i,j) ~= 0
-            rho = 5*sigma*alpha*H(i)*H(j)/(2*P);
-            couple_strength(i) = couple_strength(i) + rho*(V(j)/(1+V(j)) - V(i)/(1+V(i)));
+            rho = 5*sigma*alpha*H(i)*H(j)/(sum(i,:));
+            couple_strength(i) = couple_strength(i) + rho*(V(i)/(1+V(i)) - V(j)/(1+V(j)));
         end
     end
 end
