@@ -25,26 +25,27 @@ V = X(:,1:Nh);
 t0=1;
 t1=600;
 
-figure(1)
-imagesc(V(6000,:))
-%title('Colour Map of Vegetation (Linear Coupling CD)','FontSize',20,'Interpreter','latex')
-ylabel('Time / t','FontSize',20,'Interpreter','latex')
-xlabel('Node','FontSize',20,'Interpreter','latex')
-set(gca,'FontSize',35)
-colorbar
 
-figure(2)
+
+figure()
 plot(T(t0:t1),V(t0:t1,:))
 %title('Vegetation Density vs Time (Linear Coupling CD)','FontSize',20)
 xlabel('Time / t','FontSize',20,'Interpreter','latex')
 ylabel('Vegetation Density / V','FontSize',20,'Interpreter','latex')
 set(gca,'fontsize',35)
+
+
 % discard burn-in/transients
 V = V(round(3*end/4):end,:);
 T = T(round(3*end/4):end,:);
 
-
-
+figure()
+imagesc(V)
+%title('Colour Map of Vegetation (Linear Coupling CD)','FontSize',20,'Interpreter','latex')
+ylabel('Time / t','FontSize',20,'Interpreter','latex')
+xlabel('Node','FontSize',20,'Interpreter','latex')
+set(gca,'FontSize',35)
+colorbar
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Find the different states and initialise flags of identified states %%%
