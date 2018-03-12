@@ -24,6 +24,7 @@ m = params(6);
 sigma = params(7);
 P = params(8);
 
-couple_strength = sigma/(2*P).*(A*H - diag(H)*A*ones(N,1));
+% couple_strength = sigma/(2P).*(A*H - diag(H)*A*ones(N,1));
+couple_strength = sigma*(A*H./sum(A,2) - H);
 
 end
