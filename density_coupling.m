@@ -32,6 +32,6 @@ D=@(H) maxd.*H.^(shape)./(hS.^shape+H.^shape);
 % differential equations for V, H;
 
 HD = H.*D(H);
-couple_strength = sigma/(2*P).*(A*HD - diag(HD)*A*ones(N,1));
+couple_strength = sigma*(A*HD - diag(HD)*A*ones(N,1))./sum(A,2);
 
 end
