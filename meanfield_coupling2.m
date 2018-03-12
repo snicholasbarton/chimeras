@@ -28,7 +28,7 @@ couple_strength = zeros(N,1);
 
 for i = 1:N
     Hbar = 1/sum(A(i,:)) * A(i,:) * H;
-    couple_strength(i) = sigma*Q*(Hbar - P*H(i));
+    couple_strength(i) = sigma*Q*(Hbar - 1/Q * H(i));
 end
 
 end
