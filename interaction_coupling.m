@@ -24,14 +24,7 @@ m = params(6);
 sigma = params(7);
 P = params(8);
 
-couple_strength = zeros(N,1);
-for i = 1:N
-    for j = 1:N
-        if A(i,j) ~= 0
-            rho = 5*sigma*alpha*H(i)*H(j)/sum(A(i,:));
-            couple_strength(i) = couple_strength(i) + rho*(V(i)/(1+V(i)) - V(j)/(1+V(j)));
-        end
-    end
-end
+AS=V.*H./(1+V); %attraction strength
+couple_strength = 5*sigma*alpha*(AS.*(A*H)-H.*A*AS)./sum(A,2);
 
 end
